@@ -7,8 +7,8 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",   # Vite frontend
-    "https://autora-frontend.vercel.app/" , #autora deployed frontend 
-    "https://autora-backend.vercel.app/" , #autora deployed backend
+    "https://autora-frontend.vercel.app" , #autora deployed frontend 
+    "https://autora-backend.vercel.app" , #autora deployed backend
     "http://localhost:8080" #local backend
 ]
 
