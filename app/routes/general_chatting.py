@@ -1,4 +1,5 @@
 from fastapi import APIRouter , Request
+from fastapi.responses import JSONResponse
 from app.services.autora_service import autoMate , fetchState
 from app.models.input import Input
 
@@ -21,8 +22,24 @@ async def get_answer(request : Request):
     
     query = Input(user_message=user_message , config=config)
     
-    return autoMate(query)
+    data= autoMate(query)
+
+    response = JSONResponse(content=data)
+
+    response.headers["Access-Control-Allow-Origin"] = "https://autora-frontend.vercel.app"
+    response.headers["Access-Control-Allow-Methods"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+
+    return response
 
 @router.post("/ai/fetch")
 def fetch_chats(body : dict):
-    return fetchState(body)
+    data = fetchState(body)
+
+    response = JSONResponse(content=data)
+
+    response.headers["Access-Control-Allow-Origin"] = "https://autora-frontend.vercel.app"
+    response.headers["Access-Control-Allow-Methods"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+
+    return response
