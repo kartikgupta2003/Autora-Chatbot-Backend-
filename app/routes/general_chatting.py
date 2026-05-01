@@ -24,22 +24,22 @@ async def get_answer(request : Request):
     
     data= autoMate(query)
 
-    response = JSONResponse(content=data)
+    # response = JSONResponse(content=data)
 
-    response.headers["Access-Control-Allow-Origin"] = "https://autora-frontend.vercel.app"
-    response.headers["Access-Control-Allow-Methods"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "*"
+    # response.headers["Access-Control-Allow-Origin"] = "https://autora-frontend.vercel.app"
+    # response.headers["Access-Control-Allow-Methods"] = "*"
+    # response.headers["Access-Control-Allow-Headers"] = "*"
 
-    return response
+    return data 
 
 @router.post("/ai/fetch")
 def fetch_chats(body : dict):
     data = fetchState(body)
 
-    response = JSONResponse(content=data)
+    # response = JSONResponse(content=data)
 
-    response.headers["Access-Control-Allow-Origin"] = "https://autora-frontend.vercel.app"
-    response.headers["Access-Control-Allow-Methods"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "*"
+    # response.headers["Access-Control-Allow-Origin"] = "https://autora-frontend.vercel.app"
+    # response.headers["Access-Control-Allow-Methods"] = "*"
+    # response.headers["Access-Control-Allow-Headers"] = "*"
 
-    return response
+    return data
