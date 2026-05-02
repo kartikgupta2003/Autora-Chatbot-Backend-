@@ -156,7 +156,7 @@ def filter_cars_tool(budget : Optional[Union[float, str]]=None , car_type : Opti
     try:
         print("fetch car i/p " , budget , car_type , fuel_type , brand , search , transmission)
         # async with httpx.AsyncClient(timeout=5.0) as client :
-        response = requests.get(f"https://autora-chatbot-backend.vercel.app/api/chatbot/fetchCars?maxPrice={budget}&bodyType={car_type}&fuelType={fuel_type}&make={brand}&search={search}&transmission={transmission}" , 
+        response = requests.get(f"https://autora-backend.vercel.app/api/chatbot/fetchCars?maxPrice={budget}&bodyType={car_type}&fuelType={fuel_type}&make={brand}&search={search}&transmission={transmission}" , 
                                     headers={
                                         "service-key" : CHATBOT_SERVICE_KEY
                                     }) #None transforms to null 
@@ -288,7 +288,7 @@ def book_test_drive_tool(
             "endTime" : end_time , 
             "notes" : notes
         }
-        response = requests.post(f"https://autora-chatbot-backend.vercel.app/api/chatbot/book-test-drive" , 
+        response = requests.post(f"https://autora-backend.vercel.app/api/chatbot/book-test-drive" , 
                                  json=data ,
                                     headers={
                                         "service-key" : CHATBOT_SERVICE_KEY ,
@@ -400,7 +400,7 @@ def get_test_drive_slots_tool(car_id: str) -> list[dict]:
     """
     try:
         # async with httpx.AsyncClient(timeout=5.0) as client :
-        response = requests.get(f"https://autora-chatbot-backend.vercel.app/api/chatbot/test-drive-slots?id={car_id}" , 
+        response = requests.get(f"https://autora-backend.vercel.app/api/chatbot/test-drive-slots?id={car_id}" , 
                                     headers={
                                         "service-key" : CHATBOT_SERVICE_KEY
                                     } , timeout=5) #None transforms to null 
