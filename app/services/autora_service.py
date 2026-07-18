@@ -31,7 +31,7 @@ CHATBOT_SERVICE_KEY=os.getenv("CHATBOT_SERVICE_KEY")
 # )
 
 groq_model = ChatGroq(
-    model="meta-llama/llama-4-scout-17b-16e-instruct" ,
+    model="llama-3.3-70b-versatile" ,
     groq_api_key=os.getenv("GROQ_API_KEY")
 )
 

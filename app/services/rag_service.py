@@ -115,7 +115,7 @@ You specialize in vehicle document understanding and contextual Q/A.
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")  
 groq_model = ChatGroq(
-    model="meta-llama/llama-4-scout-17b-16e-instruct" ,
+    model="llama-3.3-70b-versatile" ,
     groq_api_key=os.getenv("GROQ_API_KEY")
 )
 DB_URL = os.getenv("DB_URL")
