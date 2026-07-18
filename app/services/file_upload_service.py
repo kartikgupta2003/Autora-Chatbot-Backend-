@@ -47,7 +47,7 @@ async def uploader(file: UploadFile, auth_token: str | None = None , user_id : s
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.post(
-                "http://localhost:8080/api/docs/upload",
+                "https://autora-backend.vercel.app/api/docs/upload",
                 json=payload,
                 headers=headers,
             )
@@ -132,7 +132,7 @@ async def uploader(file: UploadFile, auth_token: str | None = None , user_id : s
         try :
             async with httpx.AsyncClient(timeout=5.0) as client:
                 response = await client.patch(
-                    "http://localhost:8080/api/docs/remove",
+                    "https://autora-backend.vercel.app/api/docs/remove",
                     json=payload,
                     headers=headers,
                 )
