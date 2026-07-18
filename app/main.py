@@ -1,5 +1,5 @@
 from fastapi import FastAPI 
-from app.routes import general_chatting
+from app.routes import general_chatting , ragroute
 # Bcz hum uvicorn Backend se run kar rhe so app.routes but agar app se hi run kar rhe hote to just routes hota 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -22,3 +22,4 @@ app.add_middleware(
 
 
 app.include_router(general_chatting.router)
+app.include_router(ragroute.router)
