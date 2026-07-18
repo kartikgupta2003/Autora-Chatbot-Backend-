@@ -14,7 +14,7 @@ async def upload_pdf(authorization : str = Header(...) , user_id : str = Header(
 
 @router.post("/qa/fetch")
 def fetch_chats(body : dict):
-    print("ftech karna hai " , flush=True)
+    # print("ftech karna hai " , flush=True)
     data = fetch_state(body)
 
     # response = JSONResponse(content=data)

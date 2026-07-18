@@ -20,7 +20,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
 async def uploader(file: UploadFile, auth_token: str | None = None , user_id : str | None = None):
-    print("file jo ayi " , file)
+    # print("file jo ayi " , file)
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Only PDF files are allowed")
 
@@ -32,14 +32,14 @@ async def uploader(file: UploadFile, auth_token: str | None = None , user_id : s
         raise HTTPException(status_code=400, detail="PDF size must be under 10 MB")
 
     file_hash = hashlib.sha256(content).hexdigest()
-    print("file hash " , file_hash)
+    # print("file hash " , file_hash)
     payload = {
         "doc_name": file.filename,
         "doc_hash": file_hash,
         "doc_size": round(len(content) / (1024 * 1024), 4),
     }
     
-    print(payload)
+    # print(payload)
     headers = {}
     if auth_token:
         headers["Authorization"] = auth_token
@@ -51,7 +51,7 @@ async def uploader(file: UploadFile, auth_token: str | None = None , user_id : s
                 json=payload,
                 headers=headers,
             )
-            print("response " , response)
+            # print("response " , response)
             response.raise_for_status()
     except httpx.TimeoutException:
         raise HTTPException(
@@ -74,16 +74,16 @@ async def uploader(file: UploadFile, auth_token: str | None = None , user_id : s
             detail="Network request failed"
         )
     except Exception as e : #generic exception handler 
-        print("erro " ,e)
+        # print("erro " ,e)
         raise HTTPException(
         status_code=500,
         detail=str(e)
         )
 
     backend_data = response.json() #converts json into python object 
-    print("data " , backend_data)
+    # print("data " , backend_data)
     if backend_data["already_uploaded"]:
-        print(file_hash)
+        # print(file_hash)
         return {
             "already_uploaded": True,
             "doc_hash": file_hash,
@@ -122,7 +122,7 @@ async def uploader(file: UploadFile, auth_token: str | None = None , user_id : s
     
     except Exception as e : #generic exception handler 
         # rollback meta data
-        print(e)
+        # print(e)
         payload = {            
             "doc_hash": file_hash
         } 
@@ -136,11 +136,11 @@ async def uploader(file: UploadFile, auth_token: str | None = None , user_id : s
                     json=payload,
                     headers=headers,
                 )
-                print(response)
+                # print(response)
                 response.raise_for_status()
         except:
             pass
-        print("ai error " , e)
+        # print("ai error " , e)
         raise HTTPException(
         status_code=500,
         detail=str(e)

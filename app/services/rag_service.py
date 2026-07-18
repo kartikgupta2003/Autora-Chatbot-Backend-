@@ -169,7 +169,7 @@ def rag_tool(query : str = None , config : RunnableConfig = None)->str:
     filename = config["configurable"]["filename"]
     file_hash = config["configurable"]["file_hash"]
     
-    print("info khecho " , user_id , filename , file_hash)
+    # print("info khecho " , user_id , filename , file_hash)
     
     retriever = vectorstore.as_retriever(search_kwargs={"k" : 3 ,
                                                         "filter" : {
@@ -179,7 +179,7 @@ def rag_tool(query : str = None , config : RunnableConfig = None)->str:
                                                             }}) #3 doc objects
     
     docs = retriever.invoke(input=query) 
-    print("chunks jo match hue " , docs)
+    # print("chunks jo match hue " , docs)
     if not docs:
         return "No relevant information was found."
 
@@ -262,7 +262,7 @@ chatbot = graph.compile(
 
 def fetch_state(body : dict)->ChatState:
   state = chatbot.get_state(config=body['config'])
-  print("state jo fetch hui " , state)
+#   print("state jo fetch hui " , state)
   messages = state.values.get("messages", [])
 #   state.get returns a LangGraph state snapshot object. That object contains metadata plus the actual graph state.
 # state.values -> dictionary return karta hai 
