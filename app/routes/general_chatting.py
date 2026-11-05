@@ -8,6 +8,7 @@ router = APIRouter()
 @router.post("/ai")
 async def get_answer(request : Request):
     body = await request.json()
+    # we could have also directly passed body : dict in the argument 
     
     user_message = body.get("user_message")
     thread_id = body.get("thread_id")

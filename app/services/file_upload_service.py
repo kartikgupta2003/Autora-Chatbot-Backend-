@@ -31,7 +31,7 @@ async def uploader(file: UploadFile, auth_token: str | None = None , user_id : s
     if len(content) > MAX_FILE_SIZE:
         raise HTTPException(status_code=400, detail="PDF size must be under 10 MB")
 
-    file_hash = hashlib.sha256(content).hexdigest()
+    file_hash = hashlib.sha256(content).hexdigest() #SHA256 generate hash of 32 characters for the file content to uniquely identify it
     # print("file hash " , file_hash)
     payload = {
         "doc_name": file.filename,

@@ -8,13 +8,15 @@ from langchain_core.tools import tool
 from langgraph.graph.message import add_messages
 from pydantic import Field
 from langgraph.types import interrupt , Command
-from langgraph.checkpoint.sqlite import SqliteSaver
-import sqlite3
+# from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.checkpoint.postgres import PostgresSaver
+# import sqlite3
 from app.models.input import Input
 import httpx #HTTP client for Python 3 that provides both synchronous and asynchronous APIs
 import os 
 import requests
 from langchain_core.runnables import RunnableConfig
+from psycopg_pool import ConnectionPool
 from dotenv import load_dotenv
 import json
 load_dotenv()
@@ -23,6 +25,7 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 CHATBOT_SERVICE_KEY=os.getenv("CHATBOT_SERVICE_KEY")
+DB_URL = os.getenv("DB_URL")
 
 
 # Models 
@@ -31,7 +34,7 @@ CHATBOT_SERVICE_KEY=os.getenv("CHATBOT_SERVICE_KEY")
 # )
 
 groq_model = ChatGroq(
-    model="llama-3.3-70b-versatile" ,
+    model="openai/gpt-oss-120b" ,
     groq_api_key=os.getenv("GROQ_API_KEY")
 )
 
@@ -206,6 +209,7 @@ def book_test_drive_tool(
     notes: Optional[str] = None ,
     config : RunnableConfig = None
 ) -> dict:
+    # LLM tool ko call karta hai, lekin RunnableConfig LangChain runtime se inject hota hai, LLM se nahi.
     """
     Book a test drive for a specific car on a given date and time range.
 
@@ -498,7 +502,7 @@ def confirm_condition(state : ChatState):
         return END
 
 
-connection_object = sqlite3.connect(database='chatbot.db' , check_same_thread=False)
+# connection_object = sqlite3.connect(database='chatbot.db' , check_same_thread=False)
 
 graph = StateGraph(ChatState)
 
@@ -513,8 +517,27 @@ graph.add_edge("tool_node" , "chat_node")
 graph.add_edge("pre_confirm_node" , "confirm_node")
 graph.add_conditional_edges("confirm_node" , confirm_condition)
 
-checkpointer = SqliteSaver(conn=connection_object)
-workflow = graph.compile(checkpointer=checkpointer)
+# checkpointer = SqliteSaver(conn=connection_object)
+# workflow = graph.compile(checkpointer=checkpointer)
+
+pool = ConnectionPool(
+    conninfo=DB_URL,
+    min_size=0,
+    max_size=5,
+    kwargs={
+        "autocommit": True,
+        "prepare_threshold": 0
+    },
+    check=ConnectionPool.check_connection
+)
+
+checkpointer = PostgresSaver(pool)
+
+checkpointer.setup()
+
+workflow = graph.compile(
+    checkpointer=checkpointer
+)
 
 def autoMate(user_input : Input):
     existing_state = workflow.get_state(config=user_input.config) #Although our state is a dictionary , but it returns a sanpshot object of our state which is of the form (existing_values, metadata)
@@ -523,13 +546,15 @@ def autoMate(user_input : Input):
     if((state_values.get("awaiting_confirmation", False) == True) and (user_input.user_message.lower() == "yes" or user_input.user_message.lower() == "no")):
         approved = True if user_input.user_message.lower() == "yes" else False
         
-        if(approved == False):
-            return "Okay, booking cancelled."
-
         final_result = workflow.invoke(
             Command(resume={"approved": approved}),
             config=user_input.config
         )
+        
+        if(approved == False):
+            return "Okay, booking cancelled."
+
+        
         # final_result = workflow.invoke(Command(resume={"approved" : user_input.user_message}) , config=user_input.config)
         
         
@@ -566,6 +591,7 @@ def fetchState(body : dict)->ChatState:
     state = workflow.get_state(config=body['config'])
     
     messages = state.values.get("messages" , [])
+    # returns a StateSnapshot object that has an attribute values -> which is The current dictionary of your graph's state 
     
     formatted = []
     
