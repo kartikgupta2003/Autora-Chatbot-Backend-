@@ -17,7 +17,7 @@ import os
 import requests
 from langchain_core.runnables import RunnableConfig
 from psycopg_pool import ConnectionPool
-from app.services.checkpointer_service import  car_checkpointer
+from app.services.persistence_service import  car_checkpointer
 from dotenv import load_dotenv
 import json
 load_dotenv()

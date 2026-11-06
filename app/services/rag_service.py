@@ -9,7 +9,7 @@ from langchain_groq import ChatGroq
 from langgraph.prebuilt import ToolNode , tools_condition
 from app.models.input import Input
 from langgraph.checkpoint.postgres import PostgresSaver
-from app.services.checkpointer_service import document_checkpointer
+from app.services.persistence_service import document_checkpointer
 import os
 from psycopg_pool import ConnectionPool
 
