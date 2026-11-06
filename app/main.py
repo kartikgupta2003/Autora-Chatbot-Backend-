@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import redis.asyncio as redis 
 from contextlib import asynccontextmanager
-from ChatBot_Backend.app.services.persistence_service import initialize_checkpointing, close_checkpointing
+from app.services.persistence_service import initialize_checkpointing, close_checkpointing
 import logging
 import os 
 
