@@ -17,6 +17,7 @@ import os
 import requests
 from langchain_core.runnables import RunnableConfig
 from psycopg_pool import ConnectionPool
+from app.services.checkpointer_service import  car_checkpointer
 from dotenv import load_dotenv
 import json
 load_dotenv()
@@ -520,23 +521,23 @@ graph.add_conditional_edges("confirm_node" , confirm_condition)
 # checkpointer = SqliteSaver(conn=connection_object)
 # workflow = graph.compile(checkpointer=checkpointer)
 
-pool = ConnectionPool(
-    conninfo=DB_URL,
-    min_size=0,
-    max_size=5,
-    kwargs={
-        "autocommit": True,
-        "prepare_threshold": 0
-    },
-    check=ConnectionPool.check_connection
-)
+# pool = ConnectionPool(
+#     conninfo=DB_URL,
+#     min_size=0,
+#     max_size=5,
+#     kwargs={
+#         "autocommit": True,
+#         "prepare_threshold": 0
+#     },
+#     check=ConnectionPool.check_connection
+# )
 
-checkpointer = PostgresSaver(pool)
+# checkpointer = PostgresSaver(pool)
 
-checkpointer.setup()
+# checkpointer.setup()
 
 workflow = graph.compile(
-    checkpointer=checkpointer
+    checkpointer=car_checkpointer
 )
 
 def autoMate(user_input : Input):

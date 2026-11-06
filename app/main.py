@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import redis.asyncio as redis 
 from contextlib import asynccontextmanager
+from app.services.checkpointer_service import initialize_checkpointing, close_checkpointing
 import logging
 import os 
 
@@ -14,10 +15,12 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.redis = redis.from_url(REDIS_URL)
+    initialize_checkpointing()
     try:
         yield
     finally:
         await app.state.redis.aclose()
+        close_checkpointing()
 
 app = FastAPI(lifespan=lifespan)
 

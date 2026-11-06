@@ -9,6 +9,7 @@ from langchain_groq import ChatGroq
 from langgraph.prebuilt import ToolNode , tools_condition
 from app.models.input import Input
 from langgraph.checkpoint.postgres import PostgresSaver
+from app.services.checkpointer_service import document_checkpointer
 import os
 from psycopg_pool import ConnectionPool
 
@@ -241,23 +242,23 @@ graph.add_edge("tools" , "chat_node")
 #     checkpointer=checkpointer
 # )
 
-pool = ConnectionPool(
-    conninfo=DB_URL,
-    min_size=0,
-    max_size=5,
-    kwargs={
-        "autocommit": True,
-        "prepare_threshold": 0
-    },
-    check=ConnectionPool.check_connection
-)
+# pool = ConnectionPool(
+#     conninfo=DB_URL,
+#     min_size=0,
+#     max_size=5,
+#     kwargs={
+#         "autocommit": True,
+#         "prepare_threshold": 0
+#     },
+#     check=ConnectionPool.check_connection
+# )
 
-checkpointer = PostgresSaver(pool)
+# checkpointer = PostgresSaver(pool)
 
-checkpointer.setup()
+# checkpointer.setup()
 
 chatbot = graph.compile(
-    checkpointer=checkpointer
+    checkpointer=document_checkpointer
 )
 
 def fetch_state(body : dict)->ChatState:
